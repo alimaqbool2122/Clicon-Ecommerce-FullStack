@@ -2,6 +2,7 @@ import express from 'express';
 import 'dotenv/config';
 import connectDB from './database/db.js';
 import userRoute from "./routes/userRoute.js"
+import homeCategoryRoute from "./routes/homeCategoryRoute.js"
 
 const app = express();
 
@@ -10,6 +11,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json())
 
 app.use('/clicon-ecommerce', userRoute);
+app.use('/clicon-ecommerce', homeCategoryRoute);
 
 // http://localhost:8000/clicon-ecommerce/register
 
