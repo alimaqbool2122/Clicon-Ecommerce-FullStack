@@ -1,8 +1,13 @@
-import express from "express"
-import { createCategory, deleteCategory, getAllCategories, updateCategory } from "../controllers/homeCategoryController.js";
+import express from "express";
+import {
+  createCategory,
+  deleteCategory,
+  getAllCategories,
+  updateCategory,
+} from "../controllers/homeCategoryController.js";
 import { verifyToken } from "../middleware/authMiddleware.js";
 
-const router = express.Router()
+const router = express.Router();
 
 router.post("/create-category", verifyToken, createCategory);
 router.get("/get-allcategories", verifyToken, getAllCategories);
