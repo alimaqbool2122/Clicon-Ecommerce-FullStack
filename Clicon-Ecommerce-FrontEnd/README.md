@@ -1,7 +1,3 @@
-# Clicon-Ecommerce-FullStack
-
-This is Clicon Ecommerce FullStack website which is created by uing the Core Next.js and BackEnd are done by using the Node.js, Express.js and MongoDB.
-
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
