@@ -109,8 +109,10 @@ import watch_7 from "../public/image/add/watch-7.png";
 import product_45 from "../public/image/product/product-45.webp";
 import product_46 from "../public/image/product/product-46.webp";
 import Check from "../public/image/svg/Check.svg";
+import EyeSlash from "../public/image/svg/EyeSlash.svg";
 
 export const assets = {
+  EyeSlash,
   Check,
   product_46,
   product_45,

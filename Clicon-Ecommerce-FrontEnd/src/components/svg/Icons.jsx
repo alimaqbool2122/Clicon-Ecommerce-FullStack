@@ -1,5 +1,3 @@
-import { easeIn } from "framer-motion";
-
 // ArrowRight
 export function ArrowRight({
   width = 20,

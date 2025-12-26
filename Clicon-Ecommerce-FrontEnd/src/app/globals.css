@@ -108,3 +108,7 @@ body {
 .container {
   @apply w-full px-3 mx-auto sm:max-w-135 md:max-w-180 lg:max-w-240 xl:max-w-285 2xl:max-w-330;
 }
+
+.placeholder-text {
+  font-size: 14px;
+}
