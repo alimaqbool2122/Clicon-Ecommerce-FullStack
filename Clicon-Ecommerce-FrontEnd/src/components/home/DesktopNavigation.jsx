@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import TopBar from "./TopBar";
 import { homepageContent } from "../../../data/home/home";
-import { useForm, Controller } from "react-hook-form";
 import {
   Facebook,
   Twitter,
@@ -16,24 +15,26 @@ import {
   PhoneCall,
   CaretDown,
   CaretRight,
-  ArrowRight,
 } from "../svg/Icons";
 import { assets } from "../../../constants/assets";
 import ROUTES from "../../../constants/routes";
+import Cart from "./Cart";
+import UserForm from "./UserForm";
 
 const DesktopNavigation = () => {
   const [active, setActive] = useState(false);
+  const [language, setLanguage] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState("English");
   const btnRef = useRef(null);
-  const [userActive, setUserActive] = useState(false);
-  const userBtnRef = useRef(null);
+  const languageRef = useRef(null);
 
   useEffect(() => {
     function handleClickOutside(e) {
       if (btnRef.current && !btnRef.current.contains(e.target)) {
         setActive(false);
       }
-      if (userBtnRef.current && !userBtnRef.current.contains(e.target)) {
-        setUserActive(false);
+      if (languageRef.current && !languageRef.current.contains(e.target)) {
+        setLanguage(false);
       }
     }
 
@@ -50,7 +51,6 @@ const DesktopNavigation = () => {
   const innerBrand = homepageContent.header.brands;
   const features = homepageContent.header.featuredPhones;
   const discount = homepageContent.header.discountBanner;
-  const [showPassword, setShowPassword] = useState(false);
   const socialLinks = [
     { name: "Twitter", url: "#", icon: <Twitter fill="#ffffff" /> },
     {
@@ -68,17 +68,11 @@ const DesktopNavigation = () => {
     { name: "Instagram", url: "#", icon: <Instragram fill="#ffffff" /> },
   ];
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    control,
-    formState: { errors },
-  } = useForm();
-
-  const onSubmit = (data) => {
-    console.log("Form Data:", data);
-  };
+  const languages = [
+    { id: 1, language: "English", image: assets.usa, tick: assets.Check },
+    { id: 2, language: "Mandarin", image: assets.man, tick: assets.Check },
+    { id: 3, language: "Russian", image: assets.rus, tick: assets.Check },
+  ];
 
   return (
     <>
@@ -113,16 +107,80 @@ const DesktopNavigation = () => {
 
               {/* Currency Wrapper */}
               <div className="flex items-center">
-                <div>
-                  <span className="text-sm text-white flex items-center gap-2 pl-6 pr-7.5">
-                    Eng
+                {/* language wrapper */}
+                <div className="relative" ref={languageRef}>
+                  <span
+                    className="text-sm text-white flex items-center gap-2 pl-6 pr-7.5 cursor-pointer"
+                    onClick={() => setLanguage(!language)}
+                  >
+                    {selectedLanguage}
                     <Image
                       src={assets.CaretDown}
                       alt="caret-down"
                       width={14}
                       height={14}
+                      className={`transition-transform duration-300 ${
+                        language ? "rotate-180" : ""
+                      }`}
                     />
                   </span>
+                  {/* language dropdown */}
+                  <div
+                    className={`w-45 absolute top-7.5 right-8 py-2 bg-white border border-[#E4E7E9] rounded-sm z-10 shadow-[0px_8px_40px_0px_rgba(0,0,0,0.12)]
+                    transition-all duration-400 ease-out origin-top
+                    ${
+                      language
+                        ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
+                        : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
+                    }
+                  `}
+                  >
+                    <div>
+                      {languages.map((language) => (
+                        <div
+                          key={language.id}
+                          className={`py-2 px-4 flex items-center justify-between cursor-pointer ${
+                            selectedLanguage !== language.language
+                              ? "hover:bg-[#f2f4f5]"
+                              : ""
+                          }`}
+                          onClick={() => {
+                            setSelectedLanguage(language.language);
+                            setLanguage(false);
+                          }}
+                        >
+                          <div className="flex items-center gap-3">
+                            <Image
+                              src={language.image}
+                              alt={language.language}
+                              width={24}
+                              height={24}
+                              className="border border-[#E4E7E9] rounded-full shrink-0"
+                            />
+                            <span
+                              className={`text-sm font-medium ${
+                                selectedLanguage === language.language
+                                  ? "text-[#191C1F]"
+                                  : "text-[#5F6C72]"
+                              }`}
+                            >
+                              {language.language}
+                            </span>
+                          </div>
+                          <div>
+                            {selectedLanguage === language.language && (
+                              <Image
+                                src={language.tick}
+                                alt="check"
+                                width={16}
+                                height={16}
+                              />
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
                 <div>
                   <span className="text-sm text-white flex items-center gap-2 pr-1">
@@ -179,159 +237,21 @@ const DesktopNavigation = () => {
             {/* Action Buttons */}
             <div className="flex items-center gap-6 text-white">
               {/* Add to cart */}
-              <button className="relative">
-                <Image
-                  src={assets.Cart_White}
-                  alt="cart-white"
-                  width={32}
-                  height={32}
-                  className=""
-                />
-                <div className="size-5 bg-white py-0.5 flex items-center justify-center rounded-full absolute -top-1 left-4">
-                  <span className="text-[#1B6392] text-[12px] font-semibold">
-                    2
-                  </span>
-                </div>
-              </button>
+              <Cart />
               {/* Wishlist */}
-              <button>
-                <Image
-                  src={assets.Heart_White}
-                  alt="cart-white"
-                  width={32}
-                  height={32}
-                  className=""
-                />
-              </button>
-              {/* user */}
-              <div className="relative" ref={userBtnRef}>
-                <button onClick={() => setUserActive(!userActive)}>
+              <div>
+                <button>
                   <Image
-                    src={assets.user_svg}
+                    src={assets.Heart_White}
                     alt="cart-white"
                     width={32}
                     height={32}
                     className=""
                   />
                 </button>
-                {/* Signin form */}
-                <div
-                  className={`w-106 absolute top-12 right-0 bg-white border border-[#E4E7E9] rounded-sm p-8 shadow-[0px_8px_40px_0px_rgba(0,0,0,0.12)]
-  transition-all duration-400 ease-out origin-top
-  ${
-    userActive
-      ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
-      : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
-  }
-`}
-                >
-                  <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    className="grid grid-cols-12 space-y-5"
-                  >
-                    <div className="col-span-12">
-                      <h2 className="text-xl font-semibold text-[#191C1F] text-center">
-                        Sign in to your account
-                      </h2>
-                    </div>
-
-                    {/* Email */}
-                    <div className="col-span-12">
-                      <label
-                        htmlFor="email"
-                        className="text-[14px] font-normal leading-5 text-[#191C1F] text-start mt-4.5"
-                      >
-                        Email Address
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full h-11 rounded-xs border border-[#E4E7E9] outline-0 mt-2 text-[#191C1F] px-3.75"
-                        {...register("email", {
-                          required: "Email is required",
-                          pattern: {
-                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                            message: "Enter a valid email address including @",
-                          },
-                        })}
-                      />
-                      {errors.email && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.email.message}
-                        </p>
-                      )}
-                    </div>
-                    {/* Password */}
-                    <div className="relative col-span-12">
-                      <label
-                        htmlFor="password"
-                        className="text-[14px] font-normal leading-5 text-[#191C1F] text-start mt-4.5"
-                      >
-                        Password
-                      </label>
-                      <input
-                        type={showPassword ? "text" : "password"}
-                        className="w-full h-11 rounded-xs border border-[#E4E7E9] outline-0 mt-2 text-[#191C1F] px-3.75 pr-10"
-                        {...register("password", {
-                          required: "Password is required",
-                          minLength: {
-                            value: 8,
-                            message: "Password must be at least 8 characters",
-                          },
-                          pattern: {
-                            value:
-                              /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&_]{8,}$/,
-                            message:
-                              "Must contain uppercase, lowercase, number & special character",
-                          },
-                        })}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-4 top-11.25 flex items-center justify-center"
-                      >
-                        <Image
-                          src={
-                            showPassword ? assets.EyeSlash : assets.Eye_Black
-                          }
-                          alt="eye-icon"
-                          width={20}
-                          height={20}
-                          className="cursor-pointer"
-                        />
-                      </button>
-                      {errors.password && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.password.message}
-                        </p>
-                      )}
-                    </div>
-                    {/* submit button */}
-                    <button
-                      type="submit"
-                      className="col-span-12 flex items-center justify-center gap-2 border-2! border-[#FA8232]! bg-[#FA8232]! text-white px-6 h-12 text-sm! leading-px uppercase font-bold! rounded-[3px] mb-4.5 duration-500 ease-linear hover:bg-transparent! hover:text-[#191C1F]"
-                    >
-                      login
-                      <ArrowRight />
-                    </button>
-                  </form>
-                  {/* Create account  */}
-                  <div>
-                    <div className="mb-3 after:border-[#e4e7e9] relative text-center after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
-                      <p className="text-[#77878F] text-sm! bg-white inline-block px-2.5 font-normal leading-5 relative z-10">
-                        Don’t have account
-                      </p>
-                    </div>
-
-                    <Link
-                      href="#"
-                      className="flex items-center justify-center border-2 border-[#FFE7D6] bg-white! text-[#FA8232] py-[12.6px] px-[22.4px] text-[14px] leading-px uppercase font-bold rounded-[3px] h-12 duration-500 ease-linear hover:bg-[#FA8232]! hover:text-white hover:border-[#FA8232]"
-                    >
-                      Create account
-                    </Link>
-                  </div>
-                </div>
               </div>
+              {/* user */}
+              <UserForm />
             </div>
           </div>
         </div>
